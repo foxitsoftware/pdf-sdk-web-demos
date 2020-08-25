@@ -1,0 +1,35 @@
+body {
+  background-color: #f7f7f7;
+  color: #333333;
+}
+
+.container {
+  background-color: #ffffff;
+  margin: 0 auto;
+  padding: 30px;
+}
+
+#wrong-password {
+  display: none;
+}
+
+.error {
+  background-color: #f5c0c0;
+  color: #792525;
+  padding: 10px;
+}
+
+/* File upload button styling */
+.original-pdf-upload-button {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.new-pdf-upload-button {
+  top: -2px;
+  position: relative;
+}

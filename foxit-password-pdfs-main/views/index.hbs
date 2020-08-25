@@ -1,0 +1,59 @@
+<h1>PDF Previewer</h1>
+<p id="wrong-password" class="error"><strong>Whoops!</strong>
+  It looks like the password you entered was incorrect.
+  Please enter a password and try uploading your file again.
+</p>
+<p>Use the form below to preview any password-protected PDF file in this web application.</p>
+
+<!-- PDF Upload form -->
+<form class="pure-form">
+  <fieldset>
+    <input type="password" id="password" placeholder="Enter PDF Password" />
+    <input class="original-pdf-upload-button" type="file" name="file" id="file" accept=".pdf,.fdf,.xfdf" multiple="multiple" />
+    <label class="pure-button new-pdf-upload-button" for="file">Select a PDF file</label>
+  </fieldset>
+</form>
+
+<!-- PDF Display Div -->
+<div id="pdf-viewer"></div>
+
+<!-- Foxit and custom JavaScript -->
+<script src="/lib/PDFViewCtrl.full.js"></script>
+<script>
+  var PDFViewer = PDFViewCtrl.PDFViewer;
+  var pdfViewer = new PDFViewer({
+    libPath: '/lib',
+    jr: {
+      licenseSN: "{{ licenseSN }}",
+      licenseKey: "{{ licenseKey }}",
+    },
+  });
+  pdfViewer.init('#pdf-viewer');
+
+  document.getElementById('file').onchange = function (e) {
+    if (!this.value) {
+      return;
+    }
+    var pdf,fdf;
+    for (var i = e.target.files.length; i--;) {
+      var file = e.target.files[i];
+      var filename = file.name;
+      if (/\.pdf$/i.test(filename)) {
+        pdf = file
+      } else if (/\.(x)?fdf$/i.test(filename)) {
+        fdf = file
+      }
+    }
+    var options = {password: '', fdf: {file: fdf}};
+    if (document.getElementById('password').value) {
+      options.password = document.getElementById('password').value;
+      document.getElementById('password').value = '';
+    }
+    pdfViewer.openPDFByFile(pdf, options)
+      .catch(error => {
+        console.error(error);
+        document.getElementById('wrong-password').style.display = 'block';
+      });
+    this.value = '';
+  };
+</script>
